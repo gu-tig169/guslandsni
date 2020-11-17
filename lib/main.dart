@@ -143,6 +143,11 @@ Widget _textField() {
 Widget _checkboxListTodo(String toDo) {
   return CheckboxListTile(
       title: Text(toDo),
+      controlAffinity: ListTileControlAffinity.leading,
+      secondary: IconButton(
+        icon: Icon(Icons.delete),
+        onPressed: (null),
+      ),
       value: false,
       onChanged: (value) {
         print("OK");
