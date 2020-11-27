@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'model.dart';
 
 class AndraVy extends StatelessWidget {
-  final controller = TextEditingController();
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -14,12 +14,13 @@ class AndraVy extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(25.0),
+          padding: const EdgeInsets.all(22.0),
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 35.0),
+                padding: const EdgeInsets.only(top: 30.0),
                 child: TextField(
+                  controller: controller,
                   decoration: InputDecoration(
                     hintText: 'Lägg till',
                     border: OutlineInputBorder(),
@@ -27,11 +28,11 @@ class AndraVy extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 125.0, top: 22),
+                padding: const EdgeInsets.only(left: 120.0, top: 19),
                 child: Row(
                   children: [
                     IconButton(
-                        iconSize: 15.0,
+                        iconSize: 20.0,
                         icon: Icon(Icons.add),
                         onPressed: () {
                           Navigator.pop(

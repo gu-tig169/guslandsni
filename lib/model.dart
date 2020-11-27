@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'api.dart';
 
 class ObjectCreate {
   String task;
@@ -8,24 +9,46 @@ class ObjectCreate {
 }
 
 class Model extends ChangeNotifier {
-  final List<ObjectCreate> list = new List();
+  final List<ObjectCreate> _list = [];
+  List get list => _list;
+  String _filter = 'All';
+  String get filter => _filter;
 
   void addList(ObjectCreate object) {
-    list.add(object);
+    addTask(object);
+    _list.add(object);
     notifyListeners();
   }
 
-  void removeTask(object) {
-    list.remove(object);
+  void removeTask(kattpiss) {
+    _list.remove(kattpiss);
     notifyListeners();
   }
 
   bool getCheckbox(index) {
-    return list[index].valueOfCheckbox;
+    return _list[index].valueOfCheckbox;
   }
 
   void setCheckbox(index, secondValue) {
-    list[index].valueOfCheckbox = secondValue;
+    _list[index].valueOfCheckbox = secondValue;
+    notifyListeners();
+  }
+
+  List<ObjectCreate> filtreradLista(String filter) {
+    if (filter == "Done") {
+      notifyListeners();
+      print(_list.where((object) => object.valueOfCheckbox == true).toList());
+      return _list.where((object) => object.valueOfCheckbox == true).toList();
+    } else if (filter == "Not done") {
+      notifyListeners();
+      return _list.where((object) => object.valueOfCheckbox == false).toList();
+    }
+
+    return _list;
+  }
+
+  void setFilter(filter2) {
+    this._filter = filter2;
     notifyListeners();
   }
 }
