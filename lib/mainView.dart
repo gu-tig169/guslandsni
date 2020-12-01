@@ -12,22 +12,25 @@ class HuvudVy extends StatelessWidget {
           "Att utföra",
         ),
         actions: [
-          _filterKnapp(),
+          FilterKnapp(),
         ],
       ),
-      body: MinLista(),
+      body: Consumer<Model>(builder: (context, state, child) {
+        return MinLista(filtreradLista(state.list, state.filter));
+      }),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(18.0),
         child: FloatingActionButton(
           child: Icon(Icons.add),
           backgroundColor: Colors.green,
-          //backgroundColor: Colors.blueGrey[400],
           onPressed: () async {
             print("Knappen funkar");
             var thirdValue = await Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AndraVy()));
 
-            Provider.of<Model>(context, listen: false).addList(thirdValue);
+            if (thirdValue.task != "") {
+              Provider.of<Model>(context, listen: false).addList(thirdValue);
+            }
           },
         ),
       ),
@@ -36,71 +39,84 @@ class HuvudVy extends StatelessWidget {
 }
 
 class MinLista extends StatelessWidget {
+  final List<ObjectCreate> listan;
+  MinLista(this.listan);
   Widget build(BuildContext context) {
-    return Consumer<Model>(
-      builder: (context, state, child) => ListView.builder(
-          padding: const EdgeInsets.all(8),
-          itemCount: state.list.length,
-          itemBuilder: (BuildContext context, index) {
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.horizontal(),
-              ),
-              child: CheckboxListTile(
-                value: state.getCheckbox(index),
-                onChanged: (bool fourthValue) {
-                  state.setCheckbox(index, fourthValue);
-
-                  //Provider.of<Model>(context, listen: false).setCheckbox(index);
-                },
-                title: Text(
-                  state.list[index].task,
-                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
-                ),
-                secondary: IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    state.removeTask(state.list[index]);
-                  },
-                ),
-                controlAffinity: ListTileControlAffinity.leading,
-              ),
-            );
-          }),
-    );
+    return ListView.builder(
+        padding: const EdgeInsets.all(8),
+        itemCount: listan.length,
+        itemBuilder: (BuildContext context, index) =>
+            taskItem(listan[index], context, index));
   }
 }
 
-//Dropdown-meny med filtreringalternativ, ingen funktion annat är prints
-Widget _filterKnapp() {
-  List<String> choices = ["All", "Done", "Not done"];
-
-  return Padding(
-    padding: const EdgeInsets.only(right: 15.0),
-    child: PopupMenuButton<String>(
-      icon: Icon(
-        Icons.tune_rounded,
+taskItem(ObjectCreate listan, context, index) {
+  return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.horizontal(),
+    ),
+    child: CheckboxListTile(
+      title: Text(
+        listan.task,
+        style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
       ),
-      onSelected: choiceAction,
-      itemBuilder: (BuildContext context) {
-        return choices.map((String choice) {
-          return PopupMenuItem(
-            value: choice,
-            child: Text(choice),
-          );
-        }).toList();
+      value: listan.valueOfCheckbox,
+      onChanged: (bool fourthValue) {
+        var state = Provider.of<Model>(context, listen: false);
+        state.setCheckbox(index, fourthValue);
       },
+      secondary: IconButton(
+        icon: Icon(Icons.delete),
+        onPressed: () {
+          var state = Provider.of<Model>(context, listen: false);
+          state.removeTask(state.list[index]);
+        },
+      ),
+      controlAffinity: ListTileControlAffinity.leading,
     ),
   );
 }
 
-//Kollar så att knapparna i drop down fungerar
-void choiceAction(String choice) {
-  if (choice == "All") {
-    print("You pressed: All");
-  } else if (choice == "Done") {
-    print("You pressed: Done");
-  } else if (choice == "Not done") {
-    print("You pressed: Not done");
+//filterknapp
+class FilterKnapp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    Icon _icon = Icon(Icons.more_vert);
+    return Consumer<Model>(
+      builder: (context, state, child) => PopupMenuButton(
+        onSelected: (value) {
+          Provider.of<Model>(context, listen: false).setFilter(value);
+        },
+        icon: _icon,
+        itemBuilder: (context) => [
+          PopupMenuItem(
+            child: ListTile(
+              title: Text("All"),
+            ),
+          ),
+          PopupMenuItem(
+            child: ListTile(
+              title: Text("Done"),
+            ),
+          ),
+          PopupMenuItem(
+            child: ListTile(
+              title: Text("Not done"),
+            ),
+          ),
+        ],
+      ),
+    );
   }
+}
+
+List<ObjectCreate> filtreradLista(list, filter) {
+  if (filter == "Done") {
+    print(list.where((object) => object.valueOfCheckbox == true).toList());
+    return list.where((object) => object.valueOfCheckbox == true).toList();
+  } else if (filter == "Not done") {
+    return list.where((object) => object.valueOfCheckbox == false).toList();
+  }
+
+  return list;
 }

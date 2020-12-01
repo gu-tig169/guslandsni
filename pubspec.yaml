@@ -30,6 +30,7 @@ dependencies:
   cupertino_icons: ^1.0.0
   provider: ^4.3.2+2
   filter_list: ^0.0.5
+  http: any
 
 
 dev_dependencies:
