@@ -35,12 +35,16 @@ class AndraVy extends StatelessWidget {
                         iconSize: 20.0,
                         icon: Icon(Icons.add),
                         onPressed: () {
-                          Navigator.pop(
-                              context,
-                              ObjectCreate(
-                                  valueOfCheckbox: false,
-                                  task: controller.text));
-                          print("added");
+                          if (controller.text == '') {
+                            Navigator.pop(context);
+                          } else {
+                            Navigator.pop(
+                                context,
+                                ObjectCreate(
+                                    valueOfCheckbox: false,
+                                    task: controller.text));
+                            print("added");
+                          }
                         }),
                     _addText(),
                   ],

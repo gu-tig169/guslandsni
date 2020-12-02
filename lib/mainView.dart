@@ -12,7 +12,15 @@ class HuvudVy extends StatelessWidget {
           "Att utföra",
         ),
         actions: [
-          FilterKnapp(),
+          PopupMenuButton(
+              onSelected: (value) {
+                Provider.of<Model>(context, listen: false).setFilter(value);
+              },
+              itemBuilder: (context) => [
+                    PopupMenuItem(child: Text('All'), value: 'All'),
+                    PopupMenuItem(child: Text('Done'), value: 'Done'),
+                    PopupMenuItem(child: Text('Not done'), value: 'Not done'),
+                  ])
         ],
       ),
       body: Consumer<Model>(builder: (context, state, child) {
@@ -28,7 +36,7 @@ class HuvudVy extends StatelessWidget {
             var thirdValue = await Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AndraVy()));
 
-            if (thirdValue.task != "") {
+            if (thirdValue != null) {
               Provider.of<Model>(context, listen: false).addList(thirdValue);
             }
           },
@@ -75,39 +83,6 @@ taskItem(ObjectCreate object, context) {
       controlAffinity: ListTileControlAffinity.leading,
     ),
   );
-}
-
-//filterknapp
-class FilterKnapp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    Icon _icon = Icon(Icons.more_vert);
-    return Consumer<Model>(
-      builder: (context, state, child) => PopupMenuButton(
-        onSelected: (value) {
-          Provider.of<Model>(context, listen: false).setFilter(value);
-        },
-        icon: _icon,
-        itemBuilder: (context) => [
-          PopupMenuItem(
-            child: ListTile(
-              title: Text("All"),
-            ),
-          ),
-          PopupMenuItem(
-            child: ListTile(
-              title: Text("Done"),
-            ),
-          ),
-          PopupMenuItem(
-            child: ListTile(
-              title: Text("Not done"),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 List<ObjectCreate> filtreradLista(list, filter) {
