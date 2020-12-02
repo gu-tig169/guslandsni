@@ -46,30 +46,30 @@ class MinLista extends StatelessWidget {
         padding: const EdgeInsets.all(8),
         itemCount: listan.length,
         itemBuilder: (BuildContext context, index) =>
-            taskItem(listan[index], context, index));
+            taskItem(listan[index], context));
   }
 }
 
-taskItem(ObjectCreate listan, context, index) {
+taskItem(ObjectCreate object, context) {
   return Card(
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.horizontal(),
     ),
     child: CheckboxListTile(
       title: Text(
-        listan.task,
+        object.task,
         style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
       ),
-      value: listan.valueOfCheckbox,
+      value: object.valueOfCheckbox,
       onChanged: (bool fourthValue) {
         var state = Provider.of<Model>(context, listen: false);
-        state.setCheckbox(index, fourthValue);
+        state.setCheckbox(object, fourthValue);
       },
       secondary: IconButton(
         icon: Icon(Icons.delete),
         onPressed: () {
           var state = Provider.of<Model>(context, listen: false);
-          state.removeTask(state.list[index]);
+          state.removeTask(object);
         },
       ),
       controlAffinity: ListTileControlAffinity.leading,
