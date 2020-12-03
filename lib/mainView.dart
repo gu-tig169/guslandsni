@@ -66,7 +66,11 @@ taskItem(ObjectCreate object, context) {
     child: CheckboxListTile(
       title: Text(
         object.task,
-        style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500),
+        style: TextStyle(
+            fontSize: 15.0,
+            fontWeight: FontWeight.w500,
+            decoration:
+                object.valueOfCheckbox ? TextDecoration.lineThrough : null),
       ),
       value: object.valueOfCheckbox,
       onChanged: (bool fourthValue) {
